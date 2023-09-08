@@ -24,6 +24,7 @@ class ListScheduleTableViewCell: UITableViewCell {
         name.text = "aaa"
         return name
     }()
+    // MARK: - adicionando um mark
     
     lazy var cardDateSchedule: UILabel = {
         let date = UILabel()
