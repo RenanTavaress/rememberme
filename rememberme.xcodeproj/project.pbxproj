@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C05EE50A2A6AC3550001C6D5 /* MainUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05EE5092A6AC3550001C6D5 /* MainUIView.swift */; };
 		C063F3AD2A86E55800A2D4E7 /* ListScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C063F3AC2A86E55800A2D4E7 /* ListScheduleTableViewCell.swift */; };
+		C072CF812AAACFA600197B7B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = C072CF802AAACFA600197B7B /* .gitignore */; };
 		C0A612E62A7E95CA008E9DCC /* ScheduleInfo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0A612E42A7E95CA008E9DCC /* ScheduleInfo.xcdatamodeld */; };
 		C0A612E82A815F24008E9DCC /* ScheduleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A612E72A815F24008E9DCC /* ScheduleModel.swift */; };
 		C0D2E7D32A70B2A5006941A7 /* SchedulerModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D2E7D22A70B2A5006941A7 /* SchedulerModalViewController.swift */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		C05EE5092A6AC3550001C6D5 /* MainUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainUIView.swift; sourceTree = "<group>"; };
 		C063F3AC2A86E55800A2D4E7 /* ListScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListScheduleTableViewCell.swift; sourceTree = "<group>"; };
+		C072CF802AAACFA600197B7B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		C0A612E52A7E95CA008E9DCC /* ScheduleInfo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ScheduleInfo.xcdatamodel; sourceTree = "<group>"; };
 		C0A612E72A815F24008E9DCC /* ScheduleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleModel.swift; sourceTree = "<group>"; };
 		C0D2E7D22A70B2A5006941A7 /* SchedulerModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerModalViewController.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				C0F150492A684F1A00C0BBE8 /* LaunchScreen.storyboard */,
 				C0F1504C2A684F1A00C0BBE8 /* Info.plist */,
 				C0A612E42A7E95CA008E9DCC /* ScheduleInfo.xcdatamodeld */,
+				C072CF802AAACFA600197B7B /* .gitignore */,
 			);
 			path = rememberme;
 			sourceTree = "<group>";
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0F1504B2A684F1A00C0BBE8 /* LaunchScreen.storyboard in Resources */,
+				C072CF812AAACFA600197B7B /* .gitignore in Resources */,
 				C0F150482A684F1A00C0BBE8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
