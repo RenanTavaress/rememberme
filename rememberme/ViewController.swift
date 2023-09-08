@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         tableview.separatorColor = .none
         tableview.separatorStyle = .none
         
-        tableview.backgroundColor = .systemGroupedBackground
+        tableview.backgroundColor = .red
         title = "Compromissos"
         tableview.dataSource = self
         tableview.delegate = self
