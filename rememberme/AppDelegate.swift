@@ -12,7 +12,6 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //    var window: UIWindow?
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         return true
     }
@@ -31,8 +30,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
+    
+    
+    
     var persistentContainer: NSPersistentContainer {
-        let container = NSPersistentContainer(name: "ScheduleInfo") // Substitua "NomeDoModeloDeDados" pelo nome do seu arquivo .xcdatamodeld
+        let container = NSPersistentContainer(name: "ScheduleCoreData") // Substitua "NomeDoModeloDeDados" pelo nome do seu arquivo .xcdatamodeld
         container.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Erro ao configurar o Core Data: \(error.localizedDescription)")
@@ -45,7 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var managedObjectContext: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
-    
     
     func saveContext() {
         if managedObjectContext.hasChanges {

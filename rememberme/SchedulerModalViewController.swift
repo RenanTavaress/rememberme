@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class SchedulerModalViewController: UIViewController {
+class SchedulerModalViewController: UIViewController, UITableViewDelegate {
     lazy var labelTeste: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -16,7 +16,7 @@ class SchedulerModalViewController: UIViewController {
     }()
     
     
-    lazy var scheduleName: UITextField = {
+    lazy  var scheduleName: UITextField = {
         let name = UITextField()
         name.translatesAutoresizingMaskIntoConstraints = false
         name.backgroundColor = .systemBackground
@@ -28,7 +28,7 @@ class SchedulerModalViewController: UIViewController {
         let heightConstraint = name.heightAnchor.constraint(equalToConstant: 45)
         heightConstraint.isActive = true
         
-        
+        // print(name)
         return name
     }()
     
@@ -38,8 +38,8 @@ class SchedulerModalViewController: UIViewController {
         dateSchdule.datePickerMode = .dateAndTime
         dateSchdule.timeZone = TimeZone.current
         dateSchdule.translatesAutoresizingMaskIntoConstraints = false
-        dateSchdule.preferredDatePickerStyle = .wheels
-        
+        //dateSchdule.preferredDatePickerStyle = .wheels
+        //print(dateSchdule.date)
         
         return dateSchdule
         
@@ -69,32 +69,68 @@ class SchedulerModalViewController: UIViewController {
         buttonDone.addTarget(self, action: #selector(pressed), for: .touchUpInside)
         buttonDone.setTitleColor(.tintColor, for: .normal)
         buttonDone.layer.cornerRadius = 10
-        print("teste")
         return buttonDone
     }()
     
-    @objc func handleDatePicker(sender: UIDatePicker) {
+    func handleDatePicker(sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy hh:mm"
-        inputFieldValue.text = dateFormatter.string(from: sender.date)
+        return inputFieldValue.text = dateFormatter.string(from: sender.date)
     }
     
-    func teste(date: Date)-> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "pt_BR")
+    @objc func pressed(sender: UIButton){
+        let getContext =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+       
+        let schedule = ScheduleCoreData(context: getContext)
         
-        return dateFormatter.string(from: getDateSchedule.date)
-    }
-    
-    @objc func pressed(sender: UIButton!){
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let getContext = appDelegate.persistentContainer.viewContext
-        let schedule = ScheduleModel(scheduleName: scheduleName.text!, dateSchedule: getDateSchedule.date)
-        schedule.save(getContext)
-        print(scheduleName.text!)
-        print(getDateSchedule.date)
-        print("salvouuuuuu")
-        self.dismiss(animated: true, completion: nil)
+   
+        if let name = scheduleName.text {
+            schedule.scheduleName = name
+        }
+        
+        schedule.dateSchedule = getDateSchedule.date
+        schedule.id = UUID()
+        //print(scheduleName)
+        //print(schedule.dateSchedule!)
+        
+        
+        do {
+            try getContext.save()
+            print("salvouuuuuu")
+            
+            
+            NotificationCenter.default.post(name: .Saved, object: nil)
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        } catch {
+            print("Erro ao salvar objeto: \(error.localizedDescription)")
+        }
+        
+        
+        
+        //
+        
+        
+        //        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        //        let getContext = appDelegate.persistentContainer.viewContext
+        //
+        //
+        //        if let entity = NSEntityDescription.entity(forEntityName: "ScheduleInfo", in: getContext) {
+        //                   let objeto = NSManagedObject(entity: entity, insertInto: getContext)
+        //
+        //                   // Defina os atributos com os dados dos inputs do usuário
+        //                   objeto.setValue(inputFieldValue.text, forKey: "atributoDeTexto")
+        //                   objeto.setValue(getDateSchedule.date, forKey: "atributoDeData")
+        //
+        //                   // Salve o contexto CoreData
+        //                   do {
+        //                       try getContext.save()
+        //                       print("Objeto salvo com sucesso.")
+        //                   } catch {
+        //                       print("Erro ao salvar objeto: \(error.localizedDescription)")
+        //                   }
+        //               }
     }
     
     override func viewDidLoad() {
@@ -149,7 +185,7 @@ class SchedulerModalViewController: UIViewController {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
-        //formatter.dateFormat = "dd-MM-yyyy HH:mm"
+        formatter.dateFormat = "dd-MM-yyyy HH:mm"
         formatter.locale = Locale(identifier: "pt_BR")
         inputFieldValue.text = formatter.string(from: getDateSchedule.date)
         
@@ -158,6 +194,7 @@ class SchedulerModalViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.presentationController?.containerView?.backgroundColor = .systemGroupedBackground
+        
     }
     
     
@@ -166,12 +203,12 @@ class SchedulerModalViewController: UIViewController {
 }
 
 
-extension SchedulerModalViewController {
-    func save(_ contexto: NSManagedObjectContext) {
-        do {
-            try contexto.save()
-        } catch {
-            
-        }
-    }
-}
+//extension SchedulerModalViewController {
+//    func save(_ contexto: NSManagedObjectContext) {
+//        do {
+//            try contexto.save()
+//        } catch {
+//            
+//        }
+//    }
+//}
