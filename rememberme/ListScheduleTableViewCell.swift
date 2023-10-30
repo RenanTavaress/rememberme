@@ -21,7 +21,10 @@ class ListScheduleTableViewCell: UITableViewCell {
         let name = UILabel()
         name.translatesAutoresizingMaskIntoConstraints = false
         name.font = .systemFont(ofSize: 24)
-        name.text = "aaa"
+        //name.text = "aaa"
+        //print(name)
+        name.textAlignment = .center
+        name.backgroundColor = .red
         return name
     }()
     // MARK: - adicionando um mark
@@ -30,7 +33,8 @@ class ListScheduleTableViewCell: UITableViewCell {
         let date = UILabel()
         date.translatesAutoresizingMaskIntoConstraints = false
         date.font = .systemFont(ofSize: 16)
-        date.text = "21/08/23 16:30"
+        //date.text = "21/08/23 16:30"
+       // print(date)
         return date
     }()
     
@@ -62,8 +66,11 @@ class ListScheduleTableViewCell: UITableViewCell {
             
             cardNameSchedule.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16),
             cardNameSchedule.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
+            cardNameSchedule.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
             
-            cardDateSchedule.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -32),
+           // cardNameSchedule.heightAnchor.constraint(equalToConstant: 100),
+            cardDateSchedule.topAnchor.constraint(equalTo: cardNameSchedule.bottomAnchor, constant: 0),
+            cardDateSchedule.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -16),
             cardDateSchedule.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
 
         ])
