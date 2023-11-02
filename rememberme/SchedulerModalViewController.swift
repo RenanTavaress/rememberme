@@ -9,6 +9,7 @@ import UIKit
 import CoreData
 
 class SchedulerModalViewController: UIViewController, UITableViewDelegate {
+    let vc = ViewController()
     lazy var labelTeste: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -81,15 +82,22 @@ class SchedulerModalViewController: UIViewController, UITableViewDelegate {
     @objc func pressed(sender: UIButton){
         let getContext =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
        
-        let schedule = ScheduleCoreData(context: getContext)
+        //let schedule = ScheduleCoreData(context: getContext)
+        let entity = NSEntityDescription.entity(forEntityName: "Schedule", in: getContext)!
         
+        let schedule = NSManagedObject(entity: entity, insertInto: getContext)
+        
+        
+        schedule.setValue(scheduleName.text, forKey: "name")
+        schedule.setValue(getDateSchedule.date, forKey: "date")
+        schedule.setValue(UUID(), forKey: "id")
    
-        if let name = scheduleName.text {
-            schedule.scheduleName = name
-        }
-        
-        schedule.dateSchedule = getDateSchedule.date
-        schedule.id = UUID()
+//        if let name = scheduleName.text {
+//            schedule.scheduleName = name
+//        }
+//        
+//        schedule.dateSchedule = getDateSchedule.date
+//        schedule.id = UUID()
         //print(scheduleName)
         //print(schedule.dateSchedule!)
         
@@ -97,7 +105,6 @@ class SchedulerModalViewController: UIViewController, UITableViewDelegate {
         do {
             try getContext.save()
             print("salvouuuuuu")
-            
             
             NotificationCenter.default.post(name: .Saved, object: nil)
             

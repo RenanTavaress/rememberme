@@ -10,7 +10,7 @@ import CoreData
 
 class ViewController: UIViewController {
     // var models:[ScheduleCoreData2] = []
-    var scheduleModel = [ScheduleCoreData]()
+    var scheduleModel: [NSManagedObject] = []
     // var test:[(String, Date)] = []
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -75,15 +75,7 @@ class ViewController: UIViewController {
     //
     //    }
     
-    func getAllItems(){
-        
-        do {
-            scheduleModel = try context.fetch(ScheduleCoreData.fetchRequest())
-            print(scheduleModel)
-        } catch {
-            
-        }
-    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,14 +83,14 @@ class ViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataSaved(notification:)), name: NSNotification.Name("load"), object: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Adicionar", image: UIImage(systemName: "plus.circle"), target: self, action: #selector(addTapped))
         navigationController?.navigationBar.prefersLargeTitles = true
-      
+        
         
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor , constant: 8),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-
+            
         ])
         
         print(scheduleModel.count)
@@ -111,22 +103,38 @@ class ViewController: UIViewController {
         //        }
     }
     
+    func getAllItems(){
+        
+        //        scheduleModel = try context.fetch(ScheduleCoreData.fetchRequest())
+        //        print(scheduleModel)
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Schedule")
+        
+        do {
+            scheduleModel = try context.fetch(fetchRequest)
+        } catch let error as NSError{
+            print("Não foi possivel retornar os registros. \(error)")
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getAllItems()
-        self.tableView.reloadData()
+        
+        
+        
         
     }
     
     
     @objc func dataSaved(notification: NSNotification) {
-          // Atualize sua tableView aqui
-        guard let schedule = notification.object as? ScheduleCoreData else { return }
+        // Atualize sua tableView aqui
+        guard let schedule = notification.object as? NSManagedObject else { return }
         self.scheduleModel.append(schedule)
         self.tableView.reloadData()
         print("Foi atualizado")
         print(scheduleModel.count)
-      }
+    }
     
     
     
@@ -138,19 +146,20 @@ class ViewController: UIViewController {
 
 
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource  {
+extension ViewController: UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate  {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return scheduleModel.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = scheduleModel[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListScheduleTableViewCell", for: indexPath) as! ListScheduleTableViewCell
+        let schedule = scheduleModel[indexPath.row]
+        
         cell.selectionStyle = .none
         //  cell.cardNameSchedule.text = model.scheduleName
-        if let cellName = model.scheduleName {
-            cell.cardNameSchedule.text = cellName
+        if let cellName = schedule.value(forKey: "name") {
+            cell.cardNameSchedule.text = cellName as? String
         }
         
         //print(model.scheduleName)
@@ -168,7 +177,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         formatter.dateFormat = "dd-MM-yyyy HH:mm"
-        if let date = model.dateSchedule {
+        if let date = schedule.value(forKey: "date") as? Date {
             cell.cardDateSchedule.text = formatter.string(from: date )
         }
         
@@ -181,6 +190,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
 }
 
 extension NSNotification.Name {
-    static let Saved = Notification.Name("Saved")
+    static let Saved = Notification.Name("load")
 }
 
