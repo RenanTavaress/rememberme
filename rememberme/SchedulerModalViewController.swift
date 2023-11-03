@@ -8,8 +8,7 @@
 import UIKit
 import CoreData
 
-class SchedulerModalViewController: UIViewController, UITableViewDelegate {
-    let vc = ViewController()
+class SchedulerModalViewController: UIViewController {
     lazy var labelTeste: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -106,10 +105,11 @@ class SchedulerModalViewController: UIViewController, UITableViewDelegate {
             try getContext.save()
             print("salvouuuuuu")
             
-            NotificationCenter.default.post(name: .Saved, object: nil)
             
+            NotificationCenter.default.post(name: Notification.Name("Saved"), object: schedule)
+            
+           
             self.dismiss(animated: true, completion: nil)
-            
         } catch {
             print("Erro ao salvar objeto: \(error.localizedDescription)")
         }
