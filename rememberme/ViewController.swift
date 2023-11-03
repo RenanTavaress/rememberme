@@ -88,45 +88,53 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
-        NotificationCenter.default.addObserver(self, selector: #selector(dataSaved(notification:)), name: NSNotification.Name("load"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataSaved(notification:)), name: Notification.Name("Saved"), object: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Adicionar", image: UIImage(systemName: "plus.circle"), target: self, action: #selector(addTapped))
         navigationController?.navigationBar.prefersLargeTitles = true
-      
+        
         
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor , constant: 8),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-
+            
         ])
-        
+       
         print(scheduleModel.count)
         
         
-        //        DispatchQueue.main.async {
-        //            print("reload Data!!!")
-        //            // print("Os models são \(self.models[0].scheduleName)")
-        //
-        //        }
+                DispatchQueue.main.async {
+                    print("reload Data!!!")
+                    self.getAllItems()
+                    self.tableView.reloadData()
+                    // print("Os models são \(self.models[0].scheduleName)")
+        
+                }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        getAllItems()
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        super.viewWillAppear(animated)
+    //        getAllItems()
+    //        self.tableView.reloadData()
+    //
+    //    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.tableView.reloadData()
-        
     }
     
     
     @objc func dataSaved(notification: NSNotification) {
-          // Atualize sua tableView aqui
-        guard let schedule = notification.object as? ScheduleCoreData else { return }
-        self.scheduleModel.append(schedule)
+        // Atualize sua tableView aqui
+        print("oiii")
+        guard notification.object is ScheduleCoreData else { return }
+        getAllItems()
         self.tableView.reloadData()
         print("Foi atualizado")
         print(scheduleModel.count)
-      }
+    }
     
     
     
@@ -180,7 +188,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     }
 }
 
-extension NSNotification.Name {
-    static let Saved = Notification.Name("Saved")
-}
+//extension NSNotification.Name {
+//    static let Saved = Notification.Name("Saved")
+//}
 
