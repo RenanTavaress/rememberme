@@ -15,6 +15,8 @@ class ListScheduleTableViewCell: UITableViewCell {
         view.backgroundColor = .secondarySystemGroupedBackground
         return view
        }()
+    
+    //
    
     
     lazy var cardNameSchedule: UILabel = {

@@ -24,6 +24,7 @@ class ViewController: UIViewController {
         tableview.separatorStyle = .none
         
         tableview.backgroundColor = .systemGroupedBackground
+        //
         title = "Compromissos"
         tableview.dataSource = self
         tableview.delegate = self
@@ -79,7 +80,7 @@ class ViewController: UIViewController {
         
         do {
             scheduleModel = try context.fetch(ScheduleCoreData.fetchRequest())
-            print(scheduleModel)
+            //print(scheduleModel)
         } catch {
             
         }
@@ -89,9 +90,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(tableView)
         NotificationCenter.default.addObserver(self, selector: #selector(dataSaved(notification:)), name: Notification.Name("Saved"), object: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Adicionar", image: UIImage(systemName: "plus.circle"), target: self, action: #selector(addTapped))
+        let config = UIImage.SymbolConfiguration(pointSize: 38, weight: .regular, scale: .default)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Adicionar", image: UIImage(systemName: "plus", withConfiguration: config), target: self, action: #selector(addTapped))
         navigationController?.navigationBar.prefersLargeTitles = true
-        
         
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor , constant: 8),
@@ -101,11 +102,11 @@ class ViewController: UIViewController {
             
         ])
        
-        print(scheduleModel.count)
+       // print(scheduleModel.count)
         
         
                 DispatchQueue.main.async {
-                    print("reload Data!!!")
+                   // print("reload Data!!!")
                     self.getAllItems()
                     self.tableView.reloadData()
                     // print("Os models são \(self.models[0].scheduleName)")
@@ -128,19 +129,20 @@ class ViewController: UIViewController {
     
     @objc func dataSaved(notification: NSNotification) {
         // Atualize sua tableView aqui
-        print("oiii")
+      //  print("oiii")
         guard notification.object is ScheduleCoreData else { return }
         getAllItems()
         self.tableView.reloadData()
-        print("Foi atualizado")
-        print(scheduleModel.count)
+        //print("Foi atualizado")
+       // print(scheduleModel.count)
     }
     
     
     
     @objc func addTapped() {
         let modalSchedule = SchedulerModalViewController()
-        present(modalSchedule, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: modalSchedule)
+        present(navigationController, animated: true, completion: nil)
     }
 }
 
@@ -148,7 +150,6 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return scheduleModel.count
     }
     
@@ -156,6 +157,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         let model = scheduleModel[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListScheduleTableViewCell", for: indexPath) as! ListScheduleTableViewCell
         cell.selectionStyle = .none
+        cell.backgroundColor = .systemGroupedBackground
         //  cell.cardNameSchedule.text = model.scheduleName
         if let cellName = model.scheduleName {
             cell.cardNameSchedule.text = cellName
@@ -177,6 +179,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         formatter.timeStyle = .short
         formatter.dateFormat = "dd-MM-yyyy HH:mm"
         if let date = model.dateSchedule {
+           // print("\(date) date")
             cell.cardDateSchedule.text = formatter.string(from: date )
         }
         

@@ -9,177 +9,118 @@ import UIKit
 import CoreData
 
 class SchedulerModalViewController: UIViewController {
-    lazy var labelTeste: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
+    lazy var buttonSave: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "Salvar", style: .done, target: self, action: #selector(pressed))
+        return button
+    }()
     
     lazy  var scheduleName: UITextField = {
         let name = UITextField()
         name.translatesAutoresizingMaskIntoConstraints = false
-        name.backgroundColor = .systemBackground
+        name.backgroundColor = .tertiarySystemGroupedBackground
         name.placeholder = "Digite o nome do compromisso"
         name.layer.cornerRadius = 10
         name.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: name.frame.width))
         name.leftViewMode = .always
-        
-        let heightConstraint = name.heightAnchor.constraint(equalToConstant: 45)
+        let heightConstraint = name.heightAnchor.constraint(equalToConstant: 50)
         heightConstraint.isActive = true
-        
-        // print(name)
+        name.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         return name
     }()
     
-    lazy var getDateSchedule: UIDatePicker = {
-        let dateSchdule = UIDatePicker(frame: .zero)
-        dateSchdule.locale = Locale(identifier: "pt_BR")
+    lazy var dateFieldValue: UITextField = {
+        let fieldValue = UITextField()
+        fieldValue.backgroundColor = .tertiarySystemGroupedBackground
+        fieldValue.translatesAutoresizingMaskIntoConstraints = false
+        fieldValue .leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: fieldValue.frame.width))
+        fieldValue.leftViewMode = .always
+        fieldValue.textAlignment = .left
+        fieldValue.placeholder = "Data: "
+        fieldValue.layer.cornerRadius = 10
+        let heightConstraint = fieldValue.heightAnchor.constraint(equalToConstant: 50)
+        heightConstraint.isActive = true
+        return fieldValue
+    }()
+    
+    lazy var dateSchedule: UIDatePicker = {
+        let dateSchdule = UIDatePicker()
+        dateSchdule.locale = .current
         dateSchdule.datePickerMode = .dateAndTime
         dateSchdule.timeZone = TimeZone.current
         dateSchdule.translatesAutoresizingMaskIntoConstraints = false
-        //dateSchdule.preferredDatePickerStyle = .wheels
-        //print(dateSchdule.date)
-        
+        dateSchdule.preferredDatePickerStyle = .compact
         return dateSchdule
         
     }()
     
-    lazy var inputFieldValue: UITextField = {
-        let fieldValue = UITextField()
-        fieldValue.backgroundColor = .systemBackground
-        fieldValue.translatesAutoresizingMaskIntoConstraints = false
-        fieldValue.textAlignment = .center
-        fieldValue.attributedPlaceholder = NSAttributedString(string: "Selecione a data", attributes: [NSAttributedString.Key.foregroundColor : UIColor.tintColor])
-        fieldValue.layer.cornerRadius = 10
-        
-        let heightConstraint = fieldValue.heightAnchor.constraint(equalToConstant: 45)
-        heightConstraint.isActive = true
-        
-        let doneBt = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(donePressed))
-        self.setToolbarItems([doneBt], animated: true)
-        return fieldValue
-    }()
-    
-    lazy var buttonDone: UIButton = {
-        let buttonDone = UIButton()
-        buttonDone.setTitle("Adicionar", for: .normal)
-        buttonDone.backgroundColor = .systemBackground
-        buttonDone.translatesAutoresizingMaskIntoConstraints = false
-        buttonDone.addTarget(self, action: #selector(pressed), for: .touchUpInside)
-        buttonDone.setTitleColor(.tintColor, for: .normal)
-        buttonDone.layer.cornerRadius = 10
-        return buttonDone
-    }()
-    
-    func handleDatePicker(sender: UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yyyy hh:mm"
-        return inputFieldValue.text = dateFormatter.string(from: sender.date)
-    }
-    
-    @objc func pressed(sender: UIButton){
+    @objc func pressed(){
         let getContext =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-       
         let schedule = ScheduleCoreData(context: getContext)
-        
-   
-        if let name = scheduleName.text {
-            schedule.scheduleName = name
-        }
-        
-        schedule.dateSchedule = getDateSchedule.date
+        guard let scheduleName = scheduleName.text else { return }
+        schedule.scheduleName =  scheduleName
+        schedule.dateSchedule = dateSchedule.date
         schedule.id = UUID()
-        //print(scheduleName)
-        //print(schedule.dateSchedule!)
-        
         
         do {
-            try getContext.save()
-            print("salvouuuuuu")
-            
-            
-            NotificationCenter.default.post(name: Notification.Name("Saved"), object: schedule)
-            
-           
-            self.dismiss(animated: true, completion: nil)
+            if  !scheduleName.isEmpty {
+                try getContext.save()
+                NotificationCenter.default.post(name: Notification.Name("Saved"), object: schedule)
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                let alertController = UIAlertController(title: "Falta o titulo do compromisso", message: "Por favor, coloque o titulo do compromisso", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                present(alertController, animated: true, completion: nil)
+            }
         } catch {
             print("Erro ao salvar objeto: \(error.localizedDescription)")
         }
-        
-        
-        
-        //
-        
-        
-        //        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        //        let getContext = appDelegate.persistentContainer.viewContext
-        //
-        //
-        //        if let entity = NSEntityDescription.entity(forEntityName: "ScheduleInfo", in: getContext) {
-        //                   let objeto = NSManagedObject(entity: entity, insertInto: getContext)
-        //
-        //                   // Defina os atributos com os dados dos inputs do usuário
-        //                   objeto.setValue(inputFieldValue.text, forKey: "atributoDeTexto")
-        //                   objeto.setValue(getDateSchedule.date, forKey: "atributoDeData")
-        //
-        //                   // Salve o contexto CoreData
-        //                   do {
-        //                       try getContext.save()
-        //                       print("Objeto salvo com sucesso.")
-        //                   } catch {
-        //                       print("Erro ao salvar objeto: \(error.localizedDescription)")
-        //                   }
-        //               }
     }
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        labelTeste.text = "Insira as informações necessarias"
+        navigationItem.leftBarButtonItem =  UIBarButtonItem(title: "Cancelar", style: .plain, target: self, action: #selector(cancelButtonTapped))
+        navigationItem.rightBarButtonItem = buttonSave
         
-        createToolBar()
+        navigationItem.title = "Informações necessárias"
         
-        view.addSubview(labelTeste)
         view.addSubview(scheduleName)
-        view.addSubview(inputFieldValue)
-        view.addSubview(buttonDone)
+        view.addSubview(dateFieldValue)
+        dateFieldValue.addSubview(dateSchedule)
+        
+        view.backgroundColor = .systemBackground
         
         NSLayoutConstraint.activate([
-            labelTeste.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
-            labelTeste.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            
-            scheduleName.topAnchor.constraint(equalTo: labelTeste.topAnchor, constant: 32),
+            scheduleName.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
             scheduleName.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             scheduleName.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             
-            inputFieldValue.topAnchor.constraint(equalTo: scheduleName.topAnchor, constant: 64),
-            inputFieldValue.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            inputFieldValue.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            dateFieldValue.topAnchor.constraint(equalTo: scheduleName.topAnchor, constant: 70),
+            dateFieldValue.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            dateFieldValue.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             
-            buttonDone.topAnchor.constraint(equalTo: inputFieldValue.bottomAnchor, constant: 32),
-            buttonDone.heightAnchor.constraint(equalToConstant: 50),
-            buttonDone.widthAnchor.constraint(equalToConstant: 225),
-            buttonDone.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            buttonDone.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            dateSchedule.trailingAnchor.constraint(equalTo: dateFieldValue.trailingAnchor , constant: -15),
+            dateSchedule.centerXAnchor.constraint(equalTo: dateFieldValue.centerXAnchor),
+            dateSchedule.centerYAnchor.constraint(equalTo: dateFieldValue.centerYAnchor)
         ])
         
     }
     
     
-    func createToolBar(){
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(donePressed))
-        toolbar.setItems([doneButton], animated: false)
-        
-        inputFieldValue.inputAccessoryView =  toolbar
-        
-        inputFieldValue.inputView = getDateSchedule
-        getDateSchedule.datePickerMode = .dateAndTime
+    @objc func cancelButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     
+    @objc func textFieldDidChange() {
+        
+        if  let name = scheduleName.text, !name.isEmpty {
+            buttonSave.isEnabled = true
+        } else {
+            buttonSave.isEnabled = false
+        }
+    }
     
     @objc func donePressed(){
         let formatter = DateFormatter()
@@ -187,28 +128,20 @@ class SchedulerModalViewController: UIViewController {
         formatter.timeStyle = .short
         formatter.dateFormat = "dd-MM-yyyy HH:mm"
         formatter.locale = Locale(identifier: "pt_BR")
-        inputFieldValue.text = formatter.string(from: getDateSchedule.date)
+        dateFieldValue.text = formatter.string(from: dateSchedule.date)
         
         self.view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.presentationController?.containerView?.backgroundColor = .systemGroupedBackground
-        
     }
-    
-    
-    
-    
 }
 
 
-//extension SchedulerModalViewController {
-//    func save(_ contexto: NSManagedObjectContext) {
-//        do {
-//            try contexto.save()
-//        } catch {
-//            
-//        }
-//    }
-//}
+extension SchedulerModalViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
