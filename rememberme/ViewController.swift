@@ -158,18 +158,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListScheduleTableViewCell", for: indexPath) as! ListScheduleTableViewCell
         cell.selectionStyle = .none
         cell.backgroundColor = .systemGroupedBackground
-        //  cell.cardNameSchedule.text = model.scheduleName
+        //  cell.labelNameSchedule.text = model.scheduleName
         if let cellName = model.scheduleName {
-            cell.cardNameSchedule.text = cellName
+            cell.labelNameSchedule.text = cellName
         }
         
         //print(model.scheduleName)
         
         //        if let cellName = model.scheduleName {
-        //            cell.cardNameSchedule.text =  cellName
+        //            cell.labelNameSchedule.text =  cellName
         //        }
         //        if model.scheduleName == nil {
-        //            cell.cardNameSchedule.text = "BLEAHHHHH"
+        //            cell.labelNameSchedule.text = "BLEAHHHHH"
         //            print("Estava vazio valor da celula \(cell)")
         //        } else {
         //            print("Coloquei \(model.scheduleName) na celula \(cell)  indexPath:\(indexPath)")
@@ -177,10 +177,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
-        formatter.dateFormat = "dd-MM-yyyy HH:mm"
+        formatter.dateFormat = "dd/MM/yyyy HH:mm"
         if let date = model.dateSchedule {
-           // print("\(date) date")
-            cell.cardDateSchedule.text = formatter.string(from: date )
+            cell.labelDateSchedule.text = formatter.string(from: date )
         }
         
         return cell
@@ -190,8 +189,4 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         return 150
     }
 }
-
-//extension NSNotification.Name {
-//    static let Saved = Notification.Name("Saved")
-//}
 

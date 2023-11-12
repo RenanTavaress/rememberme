@@ -48,11 +48,23 @@ class SchedulerModalViewController: UIViewController {
         dateSchdule.locale = .current
         dateSchdule.datePickerMode = .dateAndTime
         dateSchdule.timeZone = TimeZone.current
+        dateSchdule.minimumDate = .now
         dateSchdule.translatesAutoresizingMaskIntoConstraints = false
         dateSchdule.preferredDatePickerStyle = .compact
         return dateSchdule
-        
     }()
+    
+    @objc func cancelButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func textFieldDidChange() {
+        if  let name = scheduleName.text, !name.isEmpty {
+            buttonSave.isEnabled = true
+        } else {
+            buttonSave.isEnabled = false
+        }
+    }
     
     @objc func pressed(){
         let getContext =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -61,7 +73,6 @@ class SchedulerModalViewController: UIViewController {
         schedule.scheduleName =  scheduleName
         schedule.dateSchedule = dateSchedule.date
         schedule.id = UUID()
-        
         do {
             if  !scheduleName.isEmpty {
                 try getContext.save()
@@ -105,32 +116,6 @@ class SchedulerModalViewController: UIViewController {
             dateSchedule.centerYAnchor.constraint(equalTo: dateFieldValue.centerYAnchor)
         ])
         
-    }
-    
-    
-    @objc func cancelButtonTapped() {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    
-    @objc func textFieldDidChange() {
-        
-        if  let name = scheduleName.text, !name.isEmpty {
-            buttonSave.isEnabled = true
-        } else {
-            buttonSave.isEnabled = false
-        }
-    }
-    
-    @objc func donePressed(){
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        formatter.dateFormat = "dd-MM-yyyy HH:mm"
-        formatter.locale = Locale(identifier: "pt_BR")
-        dateFieldValue.text = formatter.string(from: dateSchedule.date)
-        
-        self.view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
