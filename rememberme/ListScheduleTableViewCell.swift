@@ -48,9 +48,10 @@ class ListScheduleTableViewCell: UITableViewCell {
     private func configContraints() {
         NSLayoutConstraint.activate([
             cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            cardView.topAnchor.constraint(equalTo:contentView.topAnchor, constant: 8),
+            cardView.topAnchor.constraint(equalTo:contentView.topAnchor, constant: 0),
             cardView.trailingAnchor.constraint(equalTo:contentView.trailingAnchor),
-            cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
+            
 
             labelNameSchedule.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16),
             labelNameSchedule.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
@@ -61,6 +62,7 @@ class ListScheduleTableViewCell: UITableViewCell {
             labelDateSchedule.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
 
         ])
+        
     }
 
 }
