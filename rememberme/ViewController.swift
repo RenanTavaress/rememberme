@@ -7,8 +7,13 @@
 
 import UIKit
 import CoreData
+import EventKit
+import EventKitUI
 
 class ViewController: UIViewController {
+    
+    
+    var store = EKEventStore()
     var scheduleModel = [ScheduleCoreData]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -65,11 +70,30 @@ class ViewController: UIViewController {
     }
     
     
-    
     @objc func addTapped() {
-        let modalSchedule = SchedulerModalViewController()
-        let navigationController = UINavigationController(rootViewController: modalSchedule)
-        present(navigationController, animated: true, completion: nil)
+        
+        
+        let status = EKEventStore.authorizationStatus(for: .event)
+        
+        if status == .authorized {
+            let modalSchedule = SchedulerModalViewController()
+            let navigationController = UINavigationController(rootViewController: modalSchedule)
+            self.present(navigationController, animated: true, completion: nil)
+        } else {
+            if #available(iOS 17.0, *) {
+                store.requestFullAccessToEvents { succes, error in
+                    if succes && error == nil {
+                       DispatchQueue.main.sync {
+                            let modalSchedule = SchedulerModalViewController()
+                            let navigationController = UINavigationController(rootViewController: modalSchedule)
+                            self.present(navigationController, animated: true, completion: nil)
+                        }
+                    }
+                }
+            } else {
+                // Fallback on earlier versions
+            }
+        }
     }
 }
 
@@ -158,5 +182,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 130
     }
+    
+    
 }
 

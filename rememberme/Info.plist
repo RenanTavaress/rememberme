@@ -19,5 +19,11 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Please allow access to see stuff</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>Please allow access to see stuff</string>
+	<key>Privacy - Reminders Usage Description</key>
+	<string>Please allow access to see stuff</string>
 </dict>
 </plist>

@@ -7,8 +7,11 @@
 
 import UIKit
 import CoreData
+import EventKit
+import EventKitUI
 
 class SchedulerModalViewController: UIViewController {
+    var store = EKEventStore()
     
     lazy var buttonSave: UIBarButtonItem = {
         let button = UIBarButtonItem(title: "Salvar", style: .done, target: self, action: #selector(pressed))
@@ -69,6 +72,8 @@ class SchedulerModalViewController: UIViewController {
     @objc func pressed(){
         let getContext =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let schedule = ScheduleCoreData(context: getContext)
+        guard let calendar = store.defaultCalendarForNewEvents else { return }
+        let newEvent = EKEvent(eventStore: store)
         guard let scheduleName = scheduleName.text else { return }
         schedule.scheduleName =  scheduleName
         schedule.dateSchedule = dateSchedule.date
@@ -76,6 +81,11 @@ class SchedulerModalViewController: UIViewController {
         do {
             if  !scheduleName.isEmpty {
                 try getContext.save()
+                newEvent.title = scheduleName
+                newEvent.startDate = dateSchedule.date
+                newEvent.endDate = newEvent.startDate
+                newEvent.calendar = calendar
+                try store.save(newEvent, span: .thisEvent, commit: true)
                 NotificationCenter.default.post(name: Notification.Name("Saved"), object: schedule)
                 self.dismiss(animated: true, completion: nil)
             } else {
