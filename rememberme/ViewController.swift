@@ -12,9 +12,9 @@ import EventKitUI
 
 class ViewController: UIViewController {
     // var models:[ScheduleCoreData2] = []
-    var scheduleModel: [NSManagedObject] = []
+    //var scheduleModel: [NSManagedObject] = []
     // var test:[(String, Date)] = []
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+   // let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     
     var store = EKEventStore()
@@ -150,14 +150,14 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         
         cell.selectionStyle = .none
         cell.backgroundColor = .systemGroupedBackground
-        if let cellName = model.scheduleName {
+        if let cellName = model.name {
             cell.labelNameSchedule.text = cellName
         }
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         formatter.dateFormat = "dd/MM/yyyy HH:mm"
-        if let date = model.dateSchedule {
+        if let date = model.date {
             cell.labelDateSchedule.text = formatter.string(from: date)
         }
         

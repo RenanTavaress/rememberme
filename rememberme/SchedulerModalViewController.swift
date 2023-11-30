@@ -75,8 +75,8 @@ class SchedulerModalViewController: UIViewController {
         guard let calendar = store.defaultCalendarForNewEvents else { return }
         let newEvent = EKEvent(eventStore: store)
         guard let scheduleName = scheduleName.text else { return }
-        schedule.scheduleName =  scheduleName
-        schedule.dateSchedule = dateSchedule.date
+        schedule.name =  scheduleName
+        schedule.date = dateSchedule.date
         schedule.id = UUID()
         do {
             if  !scheduleName.isEmpty {

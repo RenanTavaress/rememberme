@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		C063F3AD2A86E55800A2D4E7 /* ListScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C063F3AC2A86E55800A2D4E7 /* ListScheduleTableViewCell.swift */; };
+		C068073F2B18292000EC4218 /* ScheduleCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C068073D2B18292000EC4218 /* ScheduleCoreData+CoreDataClass.swift */; };
+		C06807402B18292000EC4218 /* ScheduleCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C068073E2B18292000EC4218 /* ScheduleCoreData+CoreDataProperties.swift */; };
 		C072CF812AAACFA600197B7B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = C072CF802AAACFA600197B7B /* .gitignore */; };
 		C0A612E62A7E95CA008E9DCC /* ScheduleCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0A612E42A7E95CA008E9DCC /* ScheduleCoreData.xcdatamodeld */; };
-		C0A8DA452AD9E05800334D63 /* ScheduleCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A8DA432AD9E05800334D63 /* ScheduleCoreData+CoreDataClass.swift */; };
-		C0A8DA462AD9E05800334D63 /* ScheduleCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A8DA442AD9E05800334D63 /* ScheduleCoreData+CoreDataProperties.swift */; };
 		C0D2E7D32A70B2A5006941A7 /* SchedulerModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D2E7D22A70B2A5006941A7 /* SchedulerModalViewController.swift */; };
 		C0F1503F2A684F1900C0BBE8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F1503E2A684F1900C0BBE8 /* AppDelegate.swift */; };
 		C0F150412A684F1900C0BBE8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F150402A684F1900C0BBE8 /* SceneDelegate.swift */; };
@@ -22,10 +22,10 @@
 
 /* Begin PBXFileReference section */
 		C063F3AC2A86E55800A2D4E7 /* ListScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListScheduleTableViewCell.swift; sourceTree = "<group>"; };
+		C068073D2B18292000EC4218 /* ScheduleCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ScheduleCoreData+CoreDataClass.swift"; path = "../ScheduleCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		C068073E2B18292000EC4218 /* ScheduleCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C072CF802AAACFA600197B7B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		C0A612E52A7E95CA008E9DCC /* ScheduleInfo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ScheduleInfo.xcdatamodel; sourceTree = "<group>"; };
-		C0A8DA432AD9E05800334D63 /* ScheduleCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
-		C0A8DA442AD9E05800334D63 /* ScheduleCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C0D2E7D22A70B2A5006941A7 /* SchedulerModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerModalViewController.swift; sourceTree = "<group>"; };
 		C0F1503B2A684F1900C0BBE8 /* rememberme.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rememberme.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0F1503E2A684F1900C0BBE8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +66,8 @@
 		C0F1503D2A684F1900C0BBE8 /* rememberme */ = {
 			isa = PBXGroup;
 			children = (
+				C068073D2B18292000EC4218 /* ScheduleCoreData+CoreDataClass.swift */,
+				C068073E2B18292000EC4218 /* ScheduleCoreData+CoreDataProperties.swift */,
 				C0F1503E2A684F1900C0BBE8 /* AppDelegate.swift */,
 				C0F150402A684F1900C0BBE8 /* SceneDelegate.swift */,
 				C0F150422A684F1900C0BBE8 /* ViewController.swift */,
@@ -155,8 +157,10 @@
 				C0A612E62A7E95CA008E9DCC /* ScheduleCoreData.xcdatamodeld in Sources */,
 				C0F1503F2A684F1900C0BBE8 /* AppDelegate.swift in Sources */,
 				C0D2E7D32A70B2A5006941A7 /* SchedulerModalViewController.swift in Sources */,
+				C068073F2B18292000EC4218 /* ScheduleCoreData+CoreDataClass.swift in Sources */,
 				C063F3AD2A86E55800A2D4E7 /* ListScheduleTableViewCell.swift in Sources */,
 				C0F150412A684F1900C0BBE8 /* SceneDelegate.swift in Sources */,
+				C06807402B18292000EC4218 /* ScheduleCoreData+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
