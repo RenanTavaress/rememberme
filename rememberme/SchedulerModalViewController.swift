@@ -32,21 +32,35 @@ class SchedulerModalViewController: UIViewController {
         return name
     }()
     
-    lazy var dateFieldValue: UITextField = {
+    lazy var startDateFieldValue: UITextField = {
         let fieldValue = UITextField()
         fieldValue.backgroundColor = .tertiarySystemGroupedBackground
         fieldValue.translatesAutoresizingMaskIntoConstraints = false
         fieldValue .leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: fieldValue.frame.width))
         fieldValue.leftViewMode = .always
         fieldValue.textAlignment = .left
-        fieldValue.placeholder = "Data: "
+        fieldValue.placeholder = "Data Início: "
         fieldValue.layer.cornerRadius = 10
         let heightConstraint = fieldValue.heightAnchor.constraint(equalToConstant: 50)
         heightConstraint.isActive = true
         return fieldValue
     }()
     
-    lazy var dateSchedule: UIDatePicker = {
+    lazy var endDateFieldValue: UITextField = {
+        let endFieldValue = UITextField()
+        endFieldValue.backgroundColor = .tertiarySystemGroupedBackground
+        endFieldValue.translatesAutoresizingMaskIntoConstraints = false
+        endFieldValue .leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: endFieldValue.frame.width))
+        endFieldValue.leftViewMode = .always
+        endFieldValue.textAlignment = .left
+        endFieldValue.placeholder = "Data Final: "
+        endFieldValue.layer.cornerRadius = 10
+        let heightConstraint = endFieldValue.heightAnchor.constraint(equalToConstant: 50)
+        heightConstraint.isActive = true
+        return endFieldValue
+    }()
+    
+    lazy var startDateSchedule: UIDatePicker = {
         let dateSchdule = UIDatePicker()
         dateSchdule.locale = .current
         dateSchdule.datePickerMode = .dateAndTime
@@ -56,6 +70,19 @@ class SchedulerModalViewController: UIViewController {
         dateSchdule.preferredDatePickerStyle = .compact
         return dateSchdule
     }()
+    
+    
+    lazy var endDateSchedule: UIDatePicker = {
+        let endDateSchdule = UIDatePicker()
+        endDateSchdule.locale = .current
+        endDateSchdule.datePickerMode = .dateAndTime
+        endDateSchdule.timeZone = TimeZone.current
+        endDateSchdule.minimumDate = .now
+        endDateSchdule.translatesAutoresizingMaskIntoConstraints = false
+        endDateSchdule.preferredDatePickerStyle = .compact
+        return endDateSchdule
+    }()
+    
     
     @objc func cancelButtonTapped() {
         self.dismiss(animated: true, completion: nil)
@@ -76,14 +103,15 @@ class SchedulerModalViewController: UIViewController {
         let newEvent = EKEvent(eventStore: store)
         guard let scheduleName = scheduleName.text else { return }
         schedule.name =  scheduleName
-        schedule.date = dateSchedule.date
+        schedule.startDate = startDateSchedule.date
+        schedule.endDate = endDateSchedule.date
         schedule.id = UUID()
         do {
             if  !scheduleName.isEmpty {
                 try getContext.save()
                 newEvent.title = scheduleName
-                newEvent.startDate = dateSchedule.date
-                newEvent.endDate = newEvent.startDate
+                newEvent.startDate = startDateSchedule.date
+                newEvent.endDate = endDateSchedule.date
                 newEvent.calendar = calendar
                 try store.save(newEvent, span: .thisEvent, commit: true)
                 NotificationCenter.default.post(name: Notification.Name("Saved"), object: schedule)
@@ -107,8 +135,10 @@ class SchedulerModalViewController: UIViewController {
         navigationItem.title = "Informações necessárias"
         
         view.addSubview(scheduleName)
-        view.addSubview(dateFieldValue)
-        dateFieldValue.addSubview(dateSchedule)
+        view.addSubview(startDateFieldValue)
+        view.addSubview(endDateFieldValue)
+        startDateFieldValue.addSubview(startDateSchedule)
+        endDateFieldValue.addSubview(endDateSchedule)
         
         view.backgroundColor = .systemBackground
         
@@ -117,13 +147,22 @@ class SchedulerModalViewController: UIViewController {
             scheduleName.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             scheduleName.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             
-            dateFieldValue.topAnchor.constraint(equalTo: scheduleName.topAnchor, constant: 70),
-            dateFieldValue.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            dateFieldValue.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            startDateFieldValue.topAnchor.constraint(equalTo: scheduleName.topAnchor, constant: 70),
+            startDateFieldValue.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            startDateFieldValue.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             
-            dateSchedule.trailingAnchor.constraint(equalTo: dateFieldValue.trailingAnchor , constant: -15),
-            dateSchedule.centerXAnchor.constraint(equalTo: dateFieldValue.centerXAnchor),
-            dateSchedule.centerYAnchor.constraint(equalTo: dateFieldValue.centerYAnchor)
+            startDateSchedule.trailingAnchor.constraint(equalTo: startDateFieldValue.trailingAnchor, constant: -15),
+            startDateSchedule.centerXAnchor.constraint(equalTo: startDateFieldValue.centerXAnchor),
+            startDateSchedule.centerYAnchor.constraint(equalTo: startDateFieldValue.centerYAnchor),
+            
+            endDateFieldValue.topAnchor.constraint(equalTo: startDateFieldValue.topAnchor, constant: 60),
+            endDateFieldValue.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            endDateFieldValue.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            
+            endDateSchedule.trailingAnchor.constraint(equalTo: endDateFieldValue.trailingAnchor, constant: -15),
+            endDateSchedule.centerXAnchor.constraint(equalTo: endDateFieldValue.centerXAnchor),
+            endDateSchedule.centerYAnchor.constraint(equalTo: endDateFieldValue.centerYAnchor),
+            
         ])
         
     }

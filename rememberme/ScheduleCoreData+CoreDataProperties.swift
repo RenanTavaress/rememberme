@@ -16,9 +16,10 @@ extension ScheduleCoreData {
         return NSFetchRequest<ScheduleCoreData>(entityName: "ScheduleCoreData")
     }
 
-    @NSManaged public var date: Date?
+    @NSManaged public var startDate: Date?
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
+    @NSManaged public var endDate: Date?
 
 }
 

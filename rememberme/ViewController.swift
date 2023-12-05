@@ -11,12 +11,6 @@ import EventKit
 import EventKitUI
 
 class ViewController: UIViewController {
-    // var models:[ScheduleCoreData2] = []
-    //var scheduleModel: [NSManagedObject] = []
-    // var test:[(String, Date)] = []
-   // let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    
     var store = EKEventStore()
     var scheduleModel = [ScheduleCoreData]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -103,50 +97,27 @@ class ViewController: UIViewController {
 
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource  {
-    //    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-    //        return true
-    //    }
-    //
-    //    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    //        let deleteAcation = UIContextualAction(style: .destructive, title: "Deletar") { (_, _, completionHandler) in
-    //            // Implemente sua lógica de exclusão aqui
-    //            self.scheduleModel.remove(at: indexPath.row)
-    //
-    //            // Deleta a célula
-    //            tableView.deleteRows(at: [indexPath], with: .fade)
-    //
-    //            // Chama o completionHandler para indicar que a ação foi concluída
-    //            completionHandler(true)
-    //        }
-    //        let configuration = UISwipeActionsConfiguration(actions: [deleteAcation])
-    //        return configuration
-    //    }
-    //
     func numberOfSections(in tableView: UITableView) -> Int {
         return scheduleModel.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Aqui, você está retornando 1 para cada seção, indicando que há apenas uma célula em cada seção
         return 1
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        // Retorna uma view vazia para o cabeçalho
         let headerView = UIView()
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        // A altura do cabeçalho é 3 pontos
         return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = scheduleModel[indexPath.section]
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListScheduleTableViewCell", for: indexPath) as! ListScheduleTableViewCell
-        let schedule = scheduleModel[indexPath.row]
         
         cell.selectionStyle = .none
         cell.backgroundColor = .systemGroupedBackground
@@ -157,8 +128,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         formatter.dateFormat = "dd/MM/yyyy HH:mm"
-        if let date = model.date {
-            cell.labelDateSchedule.text = formatter.string(from: date)
+        if let date = model.startDate {
+            cell.labelStartDateSchedule.text = formatter.string(from: date)
+        }
+        
+        if let endDate = model.endDate {
+            cell.labelEndDateSchedule.text = formatter.string(from: endDate)
         }
         
         return cell
