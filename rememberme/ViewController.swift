@@ -9,11 +9,13 @@ import UIKit
 import CoreData
 import EventKit
 import EventKitUI
+import AVFoundation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, AVAudioPlayerDelegate {
     var store = EKEventStore()
     var scheduleModel = [ScheduleCoreData]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var audioPlayer: AVAudioPlayer?
     
     lazy var tableView: UITableView = {
         let tableview = UITableView(frame: .zero, style: .plain)
@@ -30,8 +32,20 @@ class ViewController: UIViewController {
         return tableview
     }()
     
-    func getAllItems(){
+    
+    lazy var messageEmptySchedule: UILabel = {
+        let emptySchedule = UILabel()
+        emptySchedule.translatesAutoresizingMaskIntoConstraints = false
+        emptySchedule.text = "Não há compromissos marcados"
+        emptySchedule.font = .systemFont(ofSize: 24)
+        emptySchedule.textAlignment = .center
         
+        tableView.backgroundView = emptySchedule
+        tableView.separatorStyle = .none
+        return emptySchedule
+    }()
+    
+    func getAllItems(){
         do {
             scheduleModel = try context.fetch(ScheduleCoreData.fetchRequest())
         } catch {
@@ -44,8 +58,18 @@ class ViewController: UIViewController {
         view.addSubview(tableView)
         NotificationCenter.default.addObserver(self, selector: #selector(dataSaved(notification:)), name: Notification.Name("Saved"), object: nil)
         let config = UIImage.SymbolConfiguration(pointSize: 38, weight: .regular, scale: .default)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Adicionar", image: UIImage(systemName: "plus", withConfiguration: config), target: self, action: #selector(addTapped))
+        
+        if #available(iOS 16.0, *) {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Adicionar", image: UIImage(systemName: "plus", withConfiguration: config), target: self, action: #selector(addTapped))
+        } else {
+            let addButton = UIBarButtonItem(title: "Adicionar", style: .plain, target: self, action: #selector(addTapped))
+            addButton.image = UIImage(systemName: "plus", withConfiguration: config)
+            navigationItem.rightBarButtonItem = addButton
+        }
+        
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        // if let path = Bundle.main.path(forResource: , ofType: <#T##String?#>)
         
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor , constant: 8),
@@ -60,7 +84,6 @@ class ViewController: UIViewController {
         }
     }
     
-    
     @objc func dataSaved(notification: NSNotification) {
         guard notification.object is ScheduleCoreData else { return }
         getAllItems()
@@ -68,11 +91,9 @@ class ViewController: UIViewController {
     }
     
     
+    
     @objc func addTapped() {
-        
-        
         let status = EKEventStore.authorizationStatus(for: .event)
-        
         if status == .authorized {
             let modalSchedule = SchedulerModalViewController()
             let navigationController = UINavigationController(rootViewController: modalSchedule)
@@ -81,7 +102,7 @@ class ViewController: UIViewController {
             if #available(iOS 17.0, *) {
                 store.requestFullAccessToEvents { succes, error in
                     if succes && error == nil {
-                       DispatchQueue.main.sync {
+                        DispatchQueue.main.sync {
                             let modalSchedule = SchedulerModalViewController()
                             let navigationController = UINavigationController(rootViewController: modalSchedule)
                             self.present(navigationController, animated: true, completion: nil)
@@ -89,7 +110,16 @@ class ViewController: UIViewController {
                     }
                 }
             } else {
-                // Fallback on earlier versions
+                store.requestAccess(to: .event) { (succes, error) in
+                    if succes && error == nil {
+                        DispatchQueue.main.sync {
+                            let modalSchedule = SchedulerModalViewController()
+                            let navigationController = UINavigationController(rootViewController: modalSchedule)
+                            self.present(navigationController, animated: true, completion: nil)
+                        }
+                    }
+                    
+                }
             }
         }
     }
@@ -98,7 +128,14 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return scheduleModel.count
+        if scheduleModel.isEmpty {
+            self.tableView.setEmptyMessage("Não há compromissos marcados")
+            return 0
+        } else {
+            self.tableView.restore()
+            return scheduleModel.count
+        }
+       
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -116,6 +153,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let model = scheduleModel[indexPath.section]
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListScheduleTableViewCell", for: indexPath) as! ListScheduleTableViewCell
         
@@ -138,9 +176,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         
         return cell
     }
-    
-    
-    
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
@@ -167,3 +202,23 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     
 }
 
+
+extension UITableView {
+    func setEmptyMessage(_ message: String) {
+            let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
+            messageLabel.text = message
+            messageLabel.textColor = .black
+            messageLabel.numberOfLines = 0
+            messageLabel.textAlignment = .center
+            messageLabel.font = UIFont(name: "TrebuchetMS", size: 15)
+            messageLabel.sizeToFit()
+
+            self.backgroundView = messageLabel
+            self.separatorStyle = .none
+        }
+
+        func restore() {
+            self.backgroundView = nil
+            self.separatorStyle = .singleLine
+        }
+}
