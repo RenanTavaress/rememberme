@@ -2,8 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Please allow access to see stuff</string>
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Please allow access to see stuff</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>Please allow access to see stuff</string>
+	<key>Privacy - Reminders Usage Description</key>
+	<string>Please allow access to see stuff</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -21,11 +29,9 @@
 			</array>
 		</dict>
 	</dict>
-	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Please allow access to see stuff</string>
-	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
-	<string>Please allow access to see stuff</string>
-	<key>Privacy - Reminders Usage Description</key>
-	<string>Please allow access to see stuff</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>
