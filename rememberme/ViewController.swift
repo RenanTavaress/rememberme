@@ -32,19 +32,6 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
         return tableview
     }()
     
-    
-    lazy var messageEmptySchedule: UILabel = {
-        let emptySchedule = UILabel()
-        emptySchedule.translatesAutoresizingMaskIntoConstraints = false
-        emptySchedule.text = "Não há compromissos marcados"
-        emptySchedule.font = .systemFont(ofSize: 24)
-        emptySchedule.textAlignment = .center
-        
-        tableView.backgroundView = emptySchedule
-        tableView.separatorStyle = .none
-        return emptySchedule
-    }()
-    
     func getAllItems(){
         do {
             scheduleModel = try context.fetch(ScheduleCoreData.fetchRequest())
@@ -68,9 +55,7 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
         }
         
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        // if let path = Bundle.main.path(forResource: , ofType: <#T##String?#>)
-        
+    
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor , constant: 8),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
@@ -89,9 +74,7 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
         getAllItems()
         self.tableView.reloadData()
     }
-    
-    
-    
+
     @objc func addTapped() {
         let status = EKEventStore.authorizationStatus(for: .event)
         if status == .authorized {
@@ -135,7 +118,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
             self.tableView.restore()
             return scheduleModel.count
         }
-       
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -198,10 +180,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 130
     }
-    
-    
 }
-
 
 extension UITableView {
     func setEmptyMessage(_ message: String) {
