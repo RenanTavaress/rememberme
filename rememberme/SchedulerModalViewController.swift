@@ -74,15 +74,15 @@ class SchedulerModalViewController: UIViewController {
     
     lazy var endDateSchedule: UIDatePicker = {
         let endDateSchdule = UIDatePicker()
+        var currentDate = Date()
         endDateSchdule.locale = .current
         endDateSchdule.datePickerMode = .dateAndTime
         endDateSchdule.timeZone = TimeZone.current
-        endDateSchdule.minimumDate = .now
+        endDateSchdule.minimumDate = Calendar.current.date(byAdding: .minute, value: 1, to: currentDate)!
         endDateSchdule.translatesAutoresizingMaskIntoConstraints = false
         endDateSchdule.preferredDatePickerStyle = .compact
         return endDateSchdule
     }()
-    
     
     @objc func cancelButtonTapped() {
         self.dismiss(animated: true, completion: nil)
@@ -108,11 +108,11 @@ class SchedulerModalViewController: UIViewController {
         schedule.id = UUID()
         do {
             if  !scheduleName.isEmpty {
-                try getContext.save()
                 newEvent.title = scheduleName
                 newEvent.startDate = startDateSchedule.date
                 newEvent.endDate = endDateSchedule.date
                 newEvent.calendar = calendar
+                try getContext.save()
                 try store.save(newEvent, span: .thisEvent, commit: true)
                 NotificationCenter.default.post(name: Notification.Name("Saved"), object: schedule)
                 self.dismiss(animated: true, completion: nil)
