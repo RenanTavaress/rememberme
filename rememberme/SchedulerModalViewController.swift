@@ -68,21 +68,30 @@ class SchedulerModalViewController: UIViewController {
         dateSchdule.minimumDate = .now
         dateSchdule.translatesAutoresizingMaskIntoConstraints = false
         dateSchdule.preferredDatePickerStyle = .compact
+        
+        dateSchdule.addTarget(self, action: #selector(updateEndDateSchedule), for: .valueChanged)
         return dateSchdule
     }()
     
     
     lazy var endDateSchedule: UIDatePicker = {
         let endDateSchdule = UIDatePicker()
-        var currentDate = Date()
         endDateSchdule.locale = .current
         endDateSchdule.datePickerMode = .dateAndTime
         endDateSchdule.timeZone = TimeZone.current
-        endDateSchdule.minimumDate = Calendar.current.date(byAdding: .minute, value: 1, to: currentDate)!
+        endDateSchdule.addTarget(self, action: #selector(updateEndDateSchedule), for: .valueChanged)
+        endDateSchdule.minimumDate = Calendar.current.date(byAdding: .minute, value: 1, to: Date())
         endDateSchdule.translatesAutoresizingMaskIntoConstraints = false
         endDateSchdule.preferredDatePickerStyle = .compact
         return endDateSchdule
     }()
+    
+    @objc func updateEndDateSchedule() {
+        let oneMinuteLater = Calendar.current.date(byAdding: .minute, value: 1, to: startDateSchedule.date)!
+        if startDateSchedule.date > endDateSchedule.date {
+            endDateSchedule.date = max(oneMinuteLater, startDateSchedule.date)
+        }
+    }
     
     @objc func cancelButtonTapped() {
         self.dismiss(animated: true, completion: nil)

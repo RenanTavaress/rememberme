@@ -14,7 +14,7 @@ class ListScheduleTableViewCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .secondarySystemGroupedBackground
         return view
-       }()
+    }()
     
     lazy var labelNameSchedule: UILabel = {
         let name = UILabel()
@@ -39,9 +39,9 @@ class ListScheduleTableViewCell: UITableViewCell {
         date.font = .systemFont(ofSize: 16)
         return date
     }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         contentView.addSubview(cardView)
         cardView.addSubview(labelNameSchedule)
         cardView.addSubview(labelStartDateSchedule)
@@ -55,7 +55,7 @@ class ListScheduleTableViewCell: UITableViewCell {
     
     private func configContraints() {
         NSLayoutConstraint.activate([
-            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             cardView.topAnchor.constraint(equalTo:contentView.topAnchor, constant: 0),
             cardView.trailingAnchor.constraint(equalTo:contentView.trailingAnchor),
             cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
@@ -71,10 +71,10 @@ class ListScheduleTableViewCell: UITableViewCell {
             labelEndDateSchedule.topAnchor.constraint(equalTo: labelNameSchedule.bottomAnchor, constant: 0),
             labelEndDateSchedule.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -16),
             labelEndDateSchedule.trailingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: -16),
-
+            
         ])
         
     }
-
+    
 }
 

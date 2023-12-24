@@ -54,8 +54,11 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
             navigationItem.rightBarButtonItem = addButton
         }
         
+        navigationItem.leftBarButtonItem = editButtonItem
+        navigationItem.leftBarButtonItem?.title = "Editar"
+        
         navigationController?.navigationBar.prefersLargeTitles = true
-    
+        
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor , constant: 8),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
@@ -66,7 +69,21 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
         DispatchQueue.main.async {
             self.getAllItems()
             self.tableView.reloadData()
+            
         }
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        print(editButtonItem)
+        super.setEditing(editing, animated: true)
+        if isEditing {
+            self.navigationItem.leftBarButtonItem?.title = "Ok"
+            print("tocou no animated: \(animated)")
+        } else {
+            self.navigationItem.leftBarButtonItem?.title = "Editar"
+        }
+        tableView.setEditing(editing, animated: true)
+        
     }
     
     @objc func dataSaved(notification: NSNotification) {
@@ -74,7 +91,7 @@ class ViewController: UIViewController, AVAudioPlayerDelegate {
         getAllItems()
         self.tableView.reloadData()
     }
-
+    
     @objc func addTapped() {
         let status = EKEventStore.authorizationStatus(for: .event)
         if status == .authorized {
@@ -113,9 +130,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     func numberOfSections(in tableView: UITableView) -> Int {
         if scheduleModel.isEmpty {
             self.tableView.setEmptyMessage("Não há compromissos marcados")
+            self.tableView.isScrollEnabled = false
             return 0
         } else {
             self.tableView.restore()
+            self.tableView.isScrollEnabled = true
             return scheduleModel.count
         }
     }
@@ -135,8 +154,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let model = scheduleModel[indexPath.section]
+        let ready = scheduleModel.sorted {$0.startDate! < $1.startDate!}
+        let model = ready[indexPath.section]
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListScheduleTableViewCell", for: indexPath) as! ListScheduleTableViewCell
         
         cell.selectionStyle = .none
@@ -152,9 +171,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
             cell.labelStartDateSchedule.text = formatter.string(from: date)
         }
         
-        if let endDate = model.endDate {
-            cell.labelEndDateSchedule.text = formatter.string(from: endDate)
-        }
+        //        if let endDate = model.endDate {
+        //            cell.labelEndDateSchedule.text = formatter.string(from: endDate)
+        //        }
         
         return cell
     }
@@ -167,6 +186,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         tableView.beginUpdates()
         
         context.delete(scheduleModel.remove(at: indexPath.section))
+        tableView.separatorStyle = .none
         tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
         do {
             try context.save()
@@ -177,6 +197,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
         tableView.endUpdates()
     }
     
+   
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 130
     }
@@ -184,19 +206,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource  {
 
 extension UITableView {
     func setEmptyMessage(_ message: String) {
-            let messageLabel = UILabel()
-            messageLabel.text = message
-            messageLabel.textColor = .secondaryLabel
-            messageLabel.textAlignment = .center
-            messageLabel.font = .systemFont(ofSize: 20)
-            messageLabel.sizeToFit()
-
-            self.backgroundView = messageLabel
-            self.separatorStyle = .none
-        }
-
-        func restore() {
-            self.backgroundView = nil
-            self.separatorStyle = .singleLine
-        }
+        let messageLabel = UILabel()
+        messageLabel.text = message
+        messageLabel.textColor = .secondaryLabel
+        messageLabel.textAlignment = .center
+        messageLabel.font = .systemFont(ofSize: 20)
+        messageLabel.sizeToFit()
+        
+        self.backgroundView = messageLabel
+        self.separatorStyle = .none
+    }
+    
+    func restore() {
+        self.backgroundView = nil
+        self.separatorStyle = .singleLine
+    }
 }
